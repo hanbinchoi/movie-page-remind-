@@ -8,45 +8,34 @@
     <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="text/babel">
-        const root = document.getElementById("root");
-
+        function Btn({ text, changeValue }) {
+            return (
+                <button
+                    onClick={changeValue}
+                    style={{
+                        backgroundColor: "tomato",
+                        color: "black",
+                        padding: "10px 20px",
+                        borderRadius: 10,
+                        border: 0,
+                        fontSize: props.big ? 18 : 15,
+                    }}
+                >
+                    {text}
+                </button>
+            );
+        }
         function App() {
-            const [minutes, setMinutes] = React.useState(0);
-            const onChange = (event) => {
-                setMinutes(event.target.value);
-            };
-            const [flipped, setFlipped] = React.useState(false);
-            const reset = () => setMinutes(0);
-            const onFlip = () => setFlipped(!flipped);
+            const [value, setValue] = React.useState("Save");
+            const changeValue = () => setValue("Revert Changes");
             return (
                 <div>
-                    <h1>Converter</h1>
-                    <label htmlFor="M">M</label>
-                    <input
-                        value={flipped ? minutes * 60 : minutes}
-                        id="M"
-                        placeholder="M"
-                        type="number"
-                        onChange={onChange}
-                        disabled={flipped}
-                    />
-
-                    <h4>{minutes}</h4>
-                    <button onClick={reset}>reset</button>
-                    <button onClick={onFlip}>flip</button>
-                    <label htmlFor="H">H</label>
-                    <input
-                        value={flipped ? minutes : Math.round(minutes / 60)}
-                        id="H"
-                        placeholder="H"
-                        type="number"
-                        onChange={onChange}
-                        disabled={!flipped}
-                    />
+                    <Btn text={value} changeValue={changeValue} />
+                    <Btn text="Continue" big={false} />
                 </div>
             );
         }
-
+        const root = document.getElementById("root");
         ReactDOM.render(<App />, root);
     </script>
 </html>
