@@ -1,29 +1,30 @@
-import Button from "./Button";
-import styles from "./App.module.css";
 import { useState, useEffect } from "react";
 function App() {
-    const [counter, setValue] = useState(0);
-    const [keyword, setKeyword] = useState("");
-    const onClick = () => setValue((prev) => prev + 1);
-    const onChange = (event) => setKeyword(event.target.value);
-    const iRunOnlyOnce = () => {
-        console.log("bla");
-    };
+    const [loading, setLoading] = useState(true);
+    const [coins, setCoins] = useState([]);
     useEffect(() => {
-        console.log(keyword);
-    }, [keyword, counter]);
-    useEffect(iRunOnlyOnce, []);
+        fetch("https://api.coinpaprika.com/v1/tickers")
+            .then((response) => response.json())
+            .then((json) => {
+                setCoins(json);
+                setLoading(false);
+            });
+    }, []);
     return (
         <div>
-            <input
-                onChange={onChange}
-                type="text"
-                value={keyword}
-                placeholder="serch here"
-            ></input>
-            <h1 className={styles.title}>{counter}</h1>
-            <button onClick={onClick}>click</button>
-            <Button text="hello"></Button>
+            <h1>Coins {loading ? "" : `(${coins.length})`}</h1>
+            {loading ? (
+                <strong>Loading...</strong>
+            ) : (
+                <select>
+                    {coins.map((coin) => (
+                        <option key={coin.id}>
+                            {coin.name} ({coin.symbol}) : $
+                            {coin.quotes.USD.price} USD
+                        </option>
+                    ))}
+                </select>
+            )}
         </div>
     );
 }
